@@ -1,82 +1,120 @@
 <template>
-  <div class="container-fluid">
-      <div class="row my-5">
-          <div class="col-lg-6 box ">
-              <nuxt-link to="../pengunjung/tambah">
-                  <div class="card bg-pengunjung rounded-5">
-                      <div class="card-body">
-                          <h2>Pengunjung</h2>
-                      </div>
-                  </div>
-              </nuxt-link>
-          </div>
-          <div class="col-lg-6 box">
-          <nuxt-link to="../buku">
-                  <div class="card bg-buku rounded-5">
-                      <div class="card-body">
-                          <h2>Cari Buku</h2>
-                      </div>
-                  </div>
-              </nuxt-link>
-          </div>
-      </div>
-  </div>
-  <h2 style="margin: 30px;"><strong>STATISTIK</strong></h2>
-  <div class="container-fluid">
-  <div class="row justify-content-evenly rounded-3">
-      <div class="col-5">
-          <div class="card1">
-              <div class="zahra">
-                  <h2>3 Pengunjung</h2>
-              </div>
-          </div>
-      </div>
-      <div class="col-5">
-          <div class="zahra1">
-              <h2>30 Buku</h2>
-          </div>
-      </div>
-  </div>
-  </div>
-  <div class="line">
-  <Statistik />
-  </div>
+    <div class="container-fluid">
+    <div class="row my-5 justify-content-around">
+        <div class="col-lg-5">
+        <nuxt-link to="/pengunjung/tambah">
+            <div class="card bg-pengunjung rounded-5">
+            <div class="card-body">
+                <h2>Pengunjung</h2>
+            </div>
+            </div>
+        </nuxt-link>
+        </div>
+        <div class="col-lg-5"> 
+            <nuxt-link to="/buku">
+                <div class="card bg-buku rounded-5">
+                    <div class="card-body">
+                        <h2>Cari Buku</h2>
+                    </div>
+                </div>
+            </nuxt-link>
+        </div>
+        </div>
+        <h2 class="mt-5" style="margin-left: 150px;">STATISTIK</h2>
+            <div class="row my-5 justify-content-around">
+                <div class="col-lg-5">
+                    <div class="card bg-spengunjung rounded-5">
+                        <div class="card-body">
+                            <div class="row">
+                            <div class=" form-pengunjung col p-5"></div>
+                                <nuxtLink to="/pengunjung">
+                                    <div class="form-pengunjung"><h2 style="font-size: 60px; margin-right: 10px "><span class="no">{{ jml_pengunjung }}</span>Pengunjung</h2></div>
+                                </nuxtLink>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card bg-sbuku rounded-5">
+                        <div class="card-body">
+                        <div class="row">
+                            <div class="col p-5"></div>
+                                <NuxtLink to="/buku">
+                                    <div class=""><h2 style="font-size: 70px; margin-right: 200px"><span class="no">{{ jml_buku }}</span>Buku</h2></div>
+                                </NuxtLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div>
+        <div class="line">
+        <Statistik></Statistik>
+        </div>
+    </div>
 </template>
 
+<script setup>
+const supabase = useSupabaseClient()
+const jml_pengunjung = ref(0)
+const jml_buku = ref(0)
+
+async function getjml_pengunjung() {
+    const{error, data, count } = await supabase
+    .from("pengunjung")
+    .select('*', {count: 'exact' })
+    if (count) jml_pengunjung.value = count
+}
+
+async function getjml_buku() {
+    const{error, data, count } = await supabase
+    .from("buku")
+    .select('*', {count: 'exact' })
+    if (count) jml_buku.value = count
+}
+
+onMounted(() => {
+getjml_pengunjung()
+getjml_buku( )
+})
+
+</script>
+
+
 <style scoped>
-.v2 {
-  height: 3px;
-  width: 98%;
-  margin-left: 30px;
-  border-left: 3px solid black;
-  background-color: black;
-}
-.v1 {
-  margin-top: 40px;
-  margin-left: 30px;
-  border-left: 3px solid black;
-  height: 400px;
-}
 .card {
-  height: 200px;
-  box-shadow: 1px 1px 5px #414552;
+    height: 250px;
+    
 }
-.card.bg-pengunjung {
-  background-image: url('../assets/img/Picture1.png');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+.card.bg-pengunjung { 
+    background-image: url('../assets/img/bg-home-kunjungan.jpeg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 70%;
 }
-.card.bg-buku {
-  background: url('../assets/img/Picture2.png') no-repeat center center;
-  background-size: cover;
+.card.bg-buku { 
+    background-image: url('../assets/img/cari.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 70%;
 }
-.card {
-  height: 200px;
-  box-shadow: 1px 1px 10px;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #0e70a4;
+.card.bg-spengunjung { 
+    background-color: #0a2831;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 70%;
 }
+.card.bg-sbuku { 
+    background-color: #0a2831;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 70%;
+}
+
+</style>

@@ -1,53 +1,80 @@
 <template>
-  <div>
-      <h2 class="text-start my-4">{{ buku.judul }}</h2>
-      <div class="row">
-          <div class="col-md-3">
-              <div class="card">
-                  <div class="card-body">
-                      <span v-if="buku.cover"><img class="cover" :src="buku.cover" :alt="buku.judul"></span>
-              <span v-else><img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.svgrepo.com%2Fsvg%2F508699%2Flandscape-placeholder&psig=AOvVaw2-SWmfk33NzXubPfqn0P16&ust=1714794757874000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNjln7nK8IUDFQAAAAAdAAAAABAE://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.svgrepo.com%2Fsvg%2F508699%2Flandscape-placeholder&psig=AOvVaw2-SWmfk33NzXubPfqn0P16&ust=1714794757874000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNjln7nK8IUDFQAAAAAdAAAAABAE" class="cover"></span>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6">
-              <ul class="list-group list-group-flush">
-                  <li class="list-group-item">penulis : {{  buku.penulis }}</li>
-                  <li class="list-group-item">tahun_terbit : {{  buku.tahun_terbit }}</li>
-                  <li class="list-group-item">rak : {{ buku.rak }}</li>
-                  <li class=" list-group-item">deskripsi : {{ buku.deskripsi }}</li>
-              </ul>
-          </div>
-      </div>
-      <NuxtLink to="/buku" class="btn btn-light btn-lg rounded-5 px-5">
-      kembali
-      </NuxtLink>
-  </div>
+    <div class="content">
+    <div class="container py-5">
+        <div class="row mb-5">
+        <div class="col">
+            <div class="card">
+            <h2 class="text-center text-black">RINCIAN BUKU</h2>
+            <div class="container mt-5">
+                <div class="row g-3 justify-content-center text-dark">
+                <div class="col-lg-3 col-8">
+                    <img class="img-fluid" :src="buku?.cover" alt="">
+                </div>
+                <div class="col-12">
+                    <h4 class="text-dark">Judul : {{ buku?.judul }}</h4>
+                    <h4 class="text-dark">Penulis: {{ buku?.penulis }}</h4>
+                    <h4  class="text-dark">Tahun_terbit: {{ buku?.tahun_terbit }}</h4>
+                    <h4  class="text-dark">penerbit: {{ buku?.penerbit }}</h4>
+                    <h4 class="text-dark">Kategori: {{ buku?.kategori_buku?.nama }}</h4>
+                    <h4 class="text-dark">Rak: {{buku?.rak}}</h4>
+                    <h4 class="text-dark">Deskripsi: {{ buku?.deskripsi }}</h4>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="row justipy-content-end">
+        <div class="text-end">
+        <nuxt-link to="/buku" >
+            <button type="submit" class="btn justipy-content-center btn-light btn-lg rounded-3 px-5 mb-3 me-5" style="background-color: #5B92BA;">BACK</button>
+        </nuxt-link>
+        </div>
+    </div>
+    </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-
 const supabase = useSupabaseClient()
 const route = useRoute()
-const buku = ref([])
+const buku = ref()
 
-const getBukuByID = async () => {
-  const { data, error } = await supabase
-  .from ('buku')
-  .select(`*, kategori_buku(*)`)
-  .eq('id', route.params.id)
-  .single()
-  if(data) buku.value = data
-
+const getBookById = async () => {
+    const { data, error } = await supabase
+    .from('buku')
+    .select(',kategori_buku()')
+    .eq('id', route.params.id)
+    .maybeSingle()
+    if(data) buku.value = data
+    // data.forEach(book => {
+    //         const { data: url } = supabase.storage.from('cover').getPublicUrl(book.cover)
+    //         if (url) {
+    //             book.cover = url.publicUrl
+    //         }
+    //     })
 }
 
 onMounted(() => {
-  getBukuByID()
+    getBookById()
 })
 </script>
+
 <style scoped>
-.cover{
-  width: 100%;
+.content {
+    background-color: #d5dded;;
+}
+
+.card {
+    background-color: #DEEDD5;;
+    border-radius: 25px;
+}
+
+h4, h2, p{
+    color:aliceblue;
+}
+
+.img-fluid{
+    border-radius: 20px;
 }
 </style>
